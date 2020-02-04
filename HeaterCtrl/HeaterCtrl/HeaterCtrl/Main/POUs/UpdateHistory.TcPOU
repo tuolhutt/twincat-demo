@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="UpdateHistory" Id="{fa2b4187-9615-4f0d-9fed-4af5a48beba8}" SpecialFunc="None">
+    <Declaration><![CDATA[// Updates history curve
+//
+FUNCTION UpdateHistory: BOOL
+VAR_INPUT
+	
+	Step: DINT; // Step counter (1...100)
+	
+END_VAR
+VAR
+	
+	// Members...
+	Index: INT; // Index of history point
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//
+IF Step <> 1 THEN
+
+	RETURN;
+	
+END_IF
+
+// Scan history data
+FOR Index := NUM_HISTORY_POINTS TO 2 BY -1 DO
+
+	//
+	gstHistory.arPower[ Index ]       := gstHistory.arPower[ Index - 1 ];
+	gstHistory.arTemperature[ Index ] := gstHistory.arTemperature[ Index - 1 ];
+	gstHistory.arTempDiff[ Index ]    := gstHistory.arTemperature[ Index ] - gSetpoint;
+	
+END_FOR 
+
+// Update newest data to history
+gstHistory.arPower[ 1 ]       := LREAL_TO_REAL( gPower );
+gstHistory.arTemperature[ 1 ] := IO_Inputs.i_HtrTemp;
+gstHistory.arTempDiff[ 1 ]    := gstHistory.arTemperature[ 1 ] - gSetpoint;]]></ST>
+    </Implementation>
+    <LineIds Name="UpdateHistory">
+      <LineId Id="22" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="3" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

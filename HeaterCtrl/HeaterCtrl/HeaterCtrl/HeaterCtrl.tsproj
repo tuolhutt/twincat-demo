@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.30">
+	<Project ProjectGUID="{716C287F-9412-4C13-88DE-9B0EA143A9CF}" Target64Bit="true" ShowHideConfigurations="#x106">
+		<System>
+			<Settings MaxCpus="4" NonWinCpus="1">
+				<Cpu CpuId="3"/>
+			</Settings>
+			<Tasks>
+				<Task Id="2" Priority="1" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>StandardTask</Name>
+				</Task>
+				<Task Id="4" Priority="20" CycleTime="100000" AmsPort="351" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{A8E7D3B8-A66B-4C7B-BDE1-420AADDC564D}" Name="Main" PrjFilePath="Main\Main.plcproj" TmcFilePath="Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc">
+					<Name>Main Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>IO_Inputs.i_HtrTemp</Name>
+							<Comment>
+								<![CDATA[ Heater temperature [°C]]]>
+							</Comment>
+							<Type>REAL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>IO_Outputs.o_HtrON</Name>
+							<Comment>
+								<![CDATA[ Heater to ON]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO_Outputs.o_AutoStep</Name>
+							<Comment>
+								<![CDATA[ Auto-step on/off]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO_Outputs.o_Restart</Name>
+							<Comment>
+								<![CDATA[ Restart simulation]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO_Outputs.o_AddTemp20</Name>
+							<Comment>
+								<![CDATA[ Increase temperature 20C]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO_Outputs.o_DropTemp20</Name>
+							<Comment>
+								<![CDATA[ Decrease temperature 20C]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+			<Project GUID="{AFC9A470-BE69-4701-9BB4-D83051227470}" Name="Simulation" PrjFilePath="..\..\Simulation\Simulation.plcproj" TmcFilePath="..\..\Simulation\Simulation.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="..\..\Simulation\Simulation.tmc">
+					<Name>Simulation Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>IO_Inputs.i_HtrON</Name>
+							<Comment>
+								<![CDATA[ Heater to ON]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO_Inputs.i_Restart</Name>
+							<Comment>
+								<![CDATA[ Restart simulation]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>IO_Outputs.o_HtrTemp</Name>
+							<Comment>
+								<![CDATA[ Heater temperature [°C]]]>
+							</Comment>
+							<Type>REAL</Type>
+						</Var>
+					</Vars>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502041"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io/>
+	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500840205008}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^Main^Main Instance">
+			<OwnerB Name="TIPC^Simulation^Simulation Instance">
+				<Link VarA="PlcTask Inputs^IO_Inputs.i_HtrTemp" VarB="PlcTask Outputs^IO_Outputs.o_HtrTemp"/>
+				<Link VarA="PlcTask Outputs^IO_Outputs.o_HtrON" VarB="PlcTask Inputs^IO_Inputs.i_HtrON"/>
+				<Link VarA="PlcTask Outputs^IO_Outputs.o_Restart" VarB="PlcTask Inputs^IO_Inputs.i_Restart"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

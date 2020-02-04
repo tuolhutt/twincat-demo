@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="IO_Outputs" Id="{28bcc37a-8c7c-4ce1-be47-6c618050d624}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+// I/O Outputs
+//
+VAR_GLOBAL
+
+	// Output signals...
+	o_HtrON   AT %Q*: BOOL; // Heater to ON
+	o_Restart AT %Q*: BOOL; // Restart simulation
+	o_AddTemp20  AT %Q*: BOOL; // Increase temperature 20C
+	o_DropTemp20 AT %Q*: BOOL; // Decrease temperature 20C
+	o_AutoStep AT %Q*: BOOL; // Auto-step on/off
+ 
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

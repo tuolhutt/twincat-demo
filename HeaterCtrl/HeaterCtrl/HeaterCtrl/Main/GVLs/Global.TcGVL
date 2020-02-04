@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="Global" Id="{8b0875a7-d138-4b26-b658-f84a604cf327}">
+    <Declaration><![CDATA[// Global members
+//
+VAR_GLOBAL
+
+	// Structures...
+	gstHistory: ST_HISTORY; // History data
+	
+	// Enums...
+	gePidState: E_CTRL_STATE; // PID controller state
+
+	// Other global members	
+	gPower:    LREAL;      // Heating power [%]
+	gSetpoint: REAL := 50; // Temperature setpoint [°C]
+	gStepChange: REAL := 10; // Change of auto-step
+	gAutoStepTimer: REAL := 0; // Auto-step timer
+	gBoolAutoStep: BOOL := FALSE; //Auto-step boolean on/off for auto-step-button
+	
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

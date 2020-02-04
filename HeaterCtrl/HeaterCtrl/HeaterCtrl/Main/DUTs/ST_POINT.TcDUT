@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <DUT Name="ST_POINT" Id="{e2a9cdb3-02b7-4c7d-a39c-7e94efe9f42a}">
+    <Declaration><![CDATA[// Point data
+//
+TYPE ST_POINT:
+STRUCT
+	
+	// Members...
+	Power:       REAL; // Heating power [%]
+	Temperature: REAL; // Temperature [°C]
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

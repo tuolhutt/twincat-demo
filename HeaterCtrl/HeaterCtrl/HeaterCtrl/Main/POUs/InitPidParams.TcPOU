@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="InitPidParams" Id="{28bb35db-3ad5-459b-8f4f-5f046700ca43}" SpecialFunc="None">
+    <Declaration><![CDATA[// Initializes PID controller parameters
+//
+FUNCTION InitPidParams: BOOL
+VAR_INPUT
+	
+	pstParams: POINTER TO ST_CTRL_PID_PARAMS; // Pointer to PID controller parameters
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Initialize the parameters
+pstParams^.bARWOnIPartOnly     := FALSE;  // FALSE = the integration of the I-component is halted if the complete controller output reaches the upper or lower limit. TRUE = the integration is halted if the I-component (the output of the integrator) reaches some limit. 
+pstParams^.bDInTheFeedbackPath := FALSE;  // Input value OF the internal D-element can be selected with this input 
+pstParams^.bPInTheFeedbackPath := FALSE;  // Input value OF the internal P-element can be selected with this input 
+pstParams^.fOutMaxLimit        := 100.0;  // Upper limit at which integration is halted and to which the output is limited (ARW measure). Reaching this limit is indicated by a TRUE at the bARWActive output. 
+pstParams^.fOutMinLimit        := 0.0;    // Lower limit at which integration is halted and to which the output is limited (ARW measure). Reaching this limit is indicated by a TRUE at the bARWActive output. 
+pstParams^.tCtrlCycleTime      := T#1S;   // Cycle time with which the control loop is processed. This must be greater than or equal to TaskCycleTime.
+pstParams^.tTaskCycleTime      := T#1S;   // Cycle time with which the function block is called
+// PID settings
+pstParams^.fKp                 := 2.5;    // Controller amplification / controller coefficient
+pstParams^.tTn                 := T#30S;  // Integral action time. The I-component is deactivated if this is parameterized as T#0S. 
+pstParams^.tTv                 := T#10S;  // Derivative action time. The D-component is deactivated if this is parameterized as T#0S. 
+pstParams^.tTd                 := T#50MS; // Damping time 
+]]></ST>
+    </Implementation>
+    <LineIds Name="InitPidParams">
+      <LineId Id="30" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="34" Count="3" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="41" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

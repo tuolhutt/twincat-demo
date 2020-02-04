@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <POU Name="MAIN" Id="{6701c937-988a-4712-9161-41d277dbef40}" SpecialFunc="None">
+    <Declaration><![CDATA[// Application main function
+//
+PROGRAM MAIN
+VAR
+
+	// Function blocks...
+	fbHeaterCtrl: FB_HeaterCtrl; // Heater control
+	
+	// Other members...
+	Cntr: DINT; // Counter, visiting times
+	Step: SINT; // Step counter (1...100)
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Update counter
+Cntr := ( Cntr + 1 );
+
+// Hasn't the step counter overflowed yet ?
+IF Step < 100 THEN
+
+	// Increase the step counter
+	Step := ( Step + 1 );
+	
+// else, Maximum value reached already
+ELSE
+
+	// Restart the step counter
+	Step := 1;
+	
+END_IF
+
+// Call the heater control
+fbHeaterCtrl( Step := Step );
+
+// Update history
+UpdateHistory( Step );
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="10" Count="1" />
+      <LineId Id="81" Count="13" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

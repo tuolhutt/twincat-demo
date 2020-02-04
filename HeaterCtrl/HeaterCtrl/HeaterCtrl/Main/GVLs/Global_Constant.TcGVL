@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <GVL Name="Global_Constant" Id="{a6cd0a2f-9c07-422f-97ea-67ac85e4b3bd}">
+    <Declaration><![CDATA[// Global constants
+//
+VAR_GLOBAL CONSTANT
+
+	// Global constants...
+	NUM_HISTORY_POINTS: INT := 120; // Amount of history points
+	
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

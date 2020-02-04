@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <GVL Name="IO_Outputs" Id="{f0a1e0a0-6166-4e5c-80ff-9aa7e9099178}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+// Simulated I/O Outputs
+//
+VAR_GLOBAL
+
+	// Simulated output signals...
+	o_HtrTemp AT %Q*: REAL; // Heater temperature [°C]
+ 
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

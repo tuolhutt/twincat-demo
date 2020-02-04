@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <GVL Name="IO_Inputs" Id="{e3d782ef-84f8-4777-bb6d-4aa389da9db7}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+// I/O Inputs from main application
+//
+VAR_GLOBAL
+
+	// Input signals from main application...
+	i_HtrON   AT %I*: BOOL; // Heater to ON
+	i_Restart AT %I*: BOOL; // Restart simulation
+
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <POU Name="MAIN_SIMU" Id="{be71b087-304f-4ff6-85a1-cb5aeb37af55}" SpecialFunc="None">
+    <Declaration><![CDATA[// Simulation application main function
+//
+PROGRAM MAIN_SIMU
+VAR
+
+	// Function blocks...
+	fbHeaterSimu: FB_HeaterSimu; // Heater simulation
+
+	// Other members...
+	Cntr: DINT; // Counter, visiting times
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Update counter
+Cntr := ( Cntr + 1 );
+
+// Call the heater simulation
+fbHeaterSimu();
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_SIMU">
+      <LineId Id="22" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

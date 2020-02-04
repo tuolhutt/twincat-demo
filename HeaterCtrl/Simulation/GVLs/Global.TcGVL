@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <GVL Name="Global" Id="{0d156165-1c77-4bda-a5f3-7f73a80e84d5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+// Global simulation members
+//
+VAR_GLOBAL
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

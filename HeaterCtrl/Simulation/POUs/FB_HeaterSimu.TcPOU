@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.6">
+  <POU Name="FB_HeaterSimu" Id="{66d8a00c-59a2-48d1-bb92-9b45d33de25d}" SpecialFunc="None">
+    <Declaration><![CDATA[// Simulates the heater temperature
+//
+FUNCTION_BLOCK FB_HeaterSimu
+VAR_INPUT
+END_VAR
+VAR
+	
+	// Other members...
+	Cntr:        SINT; // Counter
+	Power:       SINT; // Heating power [0...100 %]
+	PowerLast:   SINT; // Last heating power [0...100 %]
+	Speed:       REAL; // Heating speed [+/- °C/s]
+	Temperature: REAL; // Temperature [°C]
+	TempTarget:  REAL; // Target temperature from the active power level [°C]
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Is restart requested ?
+IF IO_Inputs.i_Restart THEN
+
+	// Restart members
+	Cntr        := 0;
+	Power       := 0;
+	PowerLast   := 0;
+	Speed       := 0;
+	Temperature := 0;
+	
+END_IF
+
+// Is heater controlled to ON ?
+IF IO_Inputs.i_HtrON THEN
+	
+	// Increase the heating power [%]
+	Power := ( Power + 1 );
+	
+END_IF
+
+// Is visited 100 times ?
+IF Cntr = 100 THEN
+	
+	// Restart the visiting counter
+	Cntr := 1;
+	
+// else, Not 100 times yet
+ELSE
+	
+	// Increase the visiting counter
+	Cntr := ( Cntr + 1 );
+	RETURN;
+	
+END_IF
+
+// Be sure the device movement is slow
+Power := LIMIT( MAX( 0, PowerLast - 10 ), Power, MIN( 100, PowerLast + 10 ));
+
+// Tune the power (dead time)
+Power := (( Power + ( PowerLast * 2 )) / 3 );
+ 
+// Define the final temperature based from the active power level [°C]
+TempTarget := ( 10 + ( Power * 1.9 )); // 0 ...100 % => 10 ... 200 °C
+  
+// Define the heating speed  [+/- °C/s]
+Speed := LIMIT( -2, Speed + (( TempTarget - Temperature ) / 300 ), 2 );
+
+// Update new temperature [°C]
+Temperature := LIMIT( 0, Temperature + Speed, 999 );
+
+// Write temperature to I/O output [°C]
+IO_Outputs.o_HtrTemp := Temperature;
+
+// Save the latest power 
+PowerLast := Power;
+Power     := 0;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_HeaterSimu">
+      <LineId Id="112" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="39" Count="3" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="87" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

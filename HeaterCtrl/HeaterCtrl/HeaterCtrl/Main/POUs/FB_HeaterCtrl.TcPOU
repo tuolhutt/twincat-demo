@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_HeaterCtrl" Id="{96adc1bf-6090-4303-a06f-1b914879b476}" SpecialFunc="None">
+    <Declaration><![CDATA[// Controls the heater
+//
+FUNCTION_BLOCK FB_HeaterCtrl
+VAR_INPUT
+	
+	Step: SINT; // Step counter (1...100)
+	
+END_VAR
+VAR
+	
+	// Function blocks...
+	fbPID: FB_CTRL_PID; // PID controller
+	
+	// Structures...
+	stParams: ST_CTRL_PID_PARAMS; // PID controller parameters
+	
+	// Booleans...
+	bInitialized: BOOL; // Initialized
+	bRestart:     BOOL; // Restart
+	bAutoStep:    BOOL; // Auto-step
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Initialize members
+bRestart    := ( bRestart    OR IO_Outputs.o_Restart );
+
+// First visit ? 
+IF NOT bInitialized THEN
+	
+	// Initialize PID controller parameters
+	bInitialized := TRUE;
+	InitPidParams( ADR( stParams ));
+	
+	bAutoStep := FALSE;
+	
+END_IF
+
+// Is the the starting step ?
+IF Step = 1 THEN
+  
+	// Update the PID controller once per every second
+	fbPID
+	(
+		fSetpointValue := gSetpoint,
+		fActualValue   := IO_Inputs.i_HtrTemp,
+		fManSyncValue  := 0,
+		bSync          := FALSE,
+		eMode          := SEL( bRestart, eCTRL_MODE_ACTIVE, eCTRL_MODE_RESET ),
+		bHold          := FALSE,
+		stParams       := stParams,
+		fOut           => gPower,
+		eState         => gePidState
+(*
+		bARWactive     => BOOL;
+		eErrorId       => E_CTRL_ERRORCODES;
+		bError         => BOOL;
+*)
+	);
+
+	// Control the heater to ON/OFF
+	IO_Outputs.o_HtrON := ( fbPID.fOut >= Step );
+	bRestart           := FALSE;
+	
+	// Auto-step control
+	IF bAutoStep THEN
+		gAutoStepTimer := gAutoStepTimer+1;
+		IF (gAutoStepTimer >= 20) THEN
+			gSetpoint := gSetpoint + gStepChange;
+			IF (gSetpoint > 200) THEN
+				gSetpoint := 190;
+				gStepChange := -10;
+			ELSIF (gSetpoint < 0) THEN
+				gSetpoint := 10;
+				gStepChange := 10;
+			END_IF
+			gAutoStepTimer := 0;
+		END_IF
+	END_IF
+	
+// else, Not the first step now => Is heater controlled to ON ?
+ELSIF IO_Outputs.o_HtrON THEN
+	
+	// Control the heater to ON/OFF
+	IO_Outputs.o_HtrON := ( fbPID.fOut >= Step );
+	
+END_IF
+
+IF IO_Outputs.o_AddTemp20 THEN
+	
+	gSetpoint := gSetpoint + 20;
+	
+	IF (gSetpoint > 200) THEN
+		gSetpoint := 200;
+	END_IF
+	
+	IO_Outputs.o_AddTemp20 :=FALSE;
+	
+END_IF
+
+IF IO_Outputs.o_DropTemp20 THEN
+	
+	gSetpoint := gSetpoint - 20;
+	
+	IF (gSetpoint < 0) THEN
+		gSetpoint := 0;
+	END_IF
+	
+	IO_Outputs.o_DropTemp20 :=FALSE;
+	
+END_IF
+
+IF IO_Outputs.o_AutoStep THEN
+	
+	IF bAutoStep THEN
+		gStepChange := 10;
+		gAutoStepTimer := 0;
+		bAutoStep := FALSE;
+		gBoolAutoStep := FALSE;
+	ELSE
+		bAutoStep := TRUE;
+		gBoolAutoStep := TRUE;
+	END_IF
+	
+	IO_Outputs.o_AutoStep :=FALSE;
+	
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_HeaterCtrl">
+      <LineId Id="170" Count="2" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="241" Count="1" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="24" Count="4" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="129" Count="1" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="259" Count="1" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="261" Count="1" />
+      <LineId Id="264" Count="3" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="132" Count="2" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="207" Count="1" />
+      <LineId Id="212" Count="1" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="217" Count="10" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="230" Count="2" />
+      <LineId Id="235" Count="1" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="245" Count="1" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="238" Count="2" />
+      <LineId Id="229" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
